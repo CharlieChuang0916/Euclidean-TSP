@@ -4,7 +4,7 @@ from utils import fitness, random_solution
 from greedy import Greedy
 
 class GeneticAlgo(object):
-    def __init__(self, coords, population_size=10, stopping_iter=-1, k=4, p_cross=0.1, p_mutate=0.1):
+    def __init__(self, coords, population_size=100, stopping_iter=-1, k=40, p_cross=0.1, p_mutate=0.1):
         self.coords = coords
         self.N = len(coords)
         self.stopping_iter = 100000 if stopping_iter == -1 else stopping_iter

@@ -2,6 +2,8 @@ from anneal import SimAnneal
 from tabu import TabuSearch
 from genetic import GeneticAlgo
 from greedy import Greedy
+from approx import ApproxTSP
+
 from utils import visualize_routes, plot_learning
 
 import random
@@ -49,28 +51,32 @@ if __name__ == "__main__":
     path = sys.argv[1]
     algo = sys.argv[2]
     print(algo)
-    if algo not in ["SA", "tabu", "GA", "greedy"]:
+    if algo not in ["SA", "tabu", "GA", "greedy", "approx"]:
         raise ValueError("invalid algorithm")
     for file in os.listdir(path):
         filename = os.path.join(path, file)
         root, extension = os.path.splitext(filename)
         if extension == ".tsp":
             valid, coords, nb_cities = read_file(filename) # generate_random_coords(num_nodes)
-            if valid is True:
+            if valid is True and nb_cities < 2000:
                 print("Path = :", filename)
                 print("#City = :", nb_cities)
                 if algo == "SA":
-                    sa = SimAnneal(coords, stopping_iter=1000)
+                    sa = SimAnneal(coords)
                     solution, fitness_list = sa.anneal()
                 if algo == "tabu":
-                    ts = TabuSearch(coords, stopping_iter=100)
+                    ts = TabuSearch(coords, stopping_iter=500)
                     solution, fitness_list = ts.search()
                 if algo == "GA":
-                    ga = GeneticAlgo(coords, stopping_iter=20)
+                    ga = GeneticAlgo(coords, stopping_iter=1000)
                     solution, fitness_list = ga.evolution()
                 if algo == "greedy":
                     g = Greedy(coords)
                     solution, fitness = g.greedy()
+                    fitness_list = [fitness, fitness]
+                if algo == "approx":
+                    ap = ApproxTSP(coords)
+                    solution, fitness = ap.approximate()
                     fitness_list = [fitness, fitness]
                 visualize_routes(solution, coords)
                 plot_learning(fitness_list)
