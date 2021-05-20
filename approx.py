@@ -63,15 +63,7 @@ class ApproxTSP(object):
         MST = self.prim_mst()
         self.preorder_tree_walk(0, MST)
 
-        visit = [False] * self.N
-
-        solution = []
-        for node in self.W:
-            if not visit[node]:
-                solution.append(node)
-                visit[node] = True
-
-        self.best_solution = solution
+        self.best_solution = self.W
         self.best_fitness = fitness(self.coords, self.best_solution)
 
         return self.best_solution, self.best_fitness
